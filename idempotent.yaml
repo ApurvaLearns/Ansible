@@ -1,0 +1,6 @@
+- hosts: aws
+  become: true
+  become_user: root
+  tasks:
+      - name:  Shell Scripting
+        shell: echo "nameserver 192.168.1.2" > /tmp/resolve.conf

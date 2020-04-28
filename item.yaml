@@ -1,0 +1,17 @@
+- hosts: aws
+  become: true
+  become_user: root
+  tasks:
+          - name: Install Yum modeules
+            yum:
+               name: "{{item}}"
+               state: latest
+            with_items:
+                    - httpd
+                    - nginx   
+        
+
+
+
+
+

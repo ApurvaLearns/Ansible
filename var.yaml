@@ -1,0 +1,17 @@
+- hosts: aws
+  become: true
+  become_user: root
+  vars:
+      web: nginx
+      web1: httpd
+  tasks:
+      - name: Intsall the services
+        yum:
+            name:
+                - "{{web}}"
+                - "{{web1}}"
+            state: latest
+      - name: Start the services
+        service:
+            name: "{{web}}"
+            state: started      

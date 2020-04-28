@@ -1,0 +1,8 @@
+- hosts: aws
+  become: true
+  become_user: root
+  tasks:
+      - name:  Shell Scripting
+        copy:
+            dest: /tmp/resolve1.conf
+            content: "This is new testing"

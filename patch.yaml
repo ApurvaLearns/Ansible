@@ -1,0 +1,38 @@
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+      - name: Check whether the process is running or not
+        shell: /tmp/test.sh
+        ignore_errors: true
+        register: result
+      - debug:
+          msg: " The result is {{ result.stdout }}"
+      - name: Decison to start Patching
+        fail:
+            msg: "{{inventory_hostname}} has running applications. Stop the process and try again"
+        when: result.stdout=="Process is running"
+      - name: Install the updates
+        yum:
+            name: "*"
+            state: latest
+        result: kernel_package
+      - debug:
+           msg: "kernel Package has been updated"
+        when: kernel_package.rc==0
+      - name: Check if reboot is required or not
+        shell: /tmp/test1.sh
+        register: reboot_check
+      - debug: msg="{{ reboot_check.stdout}}
+      - name: Rebooting the sytem after patching
+        shell: "shutdown -r now"
+        async: 1
+        poll: 0
+      - name: Wait the system to come up
+            pause:
+                    minutes: 1
+      - name: New Kernel Version
+            shell: uname -r
+            register: new_ker
+      - debug: msg="New Kernel Version is {{ new_ker.stdout }}
+       

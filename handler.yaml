@@ -1,0 +1,18 @@
+- hosts: aws
+  become: true
+  become_user: root
+  tasks:
+      - name: Copy the file and invoke the handler
+        debug:
+            msg: Invoking the copy module
+      - name: Copy the file
+        copy:
+            dest: /tmp/handler.conf
+            content: 'This is new content for the file1'
+        notify: 
+          - restart_nginx
+  handlers:
+         - name: restart_nginx
+           service:
+               name: nginx
+               state: started
